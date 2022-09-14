@@ -34,7 +34,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                   </div>
-                                  <input class="form-control" autocomplete="off" name="nama_guru" placeholder="Nama Guru" type="text">
+                                  <input class="form-control" autocomplete="off" name="nama_guru" placeholder="Nama Guru" type="text" required>
                                 </div>
                               </div>
                             </div>
@@ -45,7 +45,7 @@
                                       <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="ni ni-vector"></i></span>
                                       </div>
-                                      <select name="jk" class="form-control">
+                                      <select name="jk" class="form-control" required>
                                         <option disabled selected> --- Pilih Jenis Kelamin --- </option>
                                         <option value="L">Laki-laki</option>
                                         <option value="P">Perempuan</option>
@@ -58,7 +58,7 @@
                               <label class="form-control-label" for="exampleDatepicker"> Kandidat :</label>
                               <?php foreach($kandidat as $row):?>
                                 <div class="custom-control custom-radio mb-3">
-                                  <input type="radio" id="customRadio<?= $row->id_kandidat?>" name="vote" value="<?= $row->id_kandidat?>" class="custom-control-input">
+                                  <input type="radio" id="customRadio<?= $row->id_kandidat?>" name="vote" value="<?= $row->id_kandidat?>" class="custom-control-input" required>
                                   <label class="custom-control-label" for="customRadio<?= $row->id_kandidat?>">Ketua : <?= $row->ketua?> & Wakil : <?= $row->wakil?></label>
                                 </div>
                               <?php endforeach;?>

@@ -34,7 +34,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                   </div>
-                                  <input class="form-control" name="nama_siswa" placeholder="Nama Siswa" type="text">
+                                  <input class="form-control" name="nama_siswa" placeholder="Nama Siswa" type="text" required>
                                 </div>
                               </div>
                             </div> 
@@ -45,7 +45,7 @@
                                   <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="ni ni-vector"></i></span>
                                   </div>
-                                  <input class="form-control" name="kelas" placeholder="Kelas contoh : VII" type="text">
+                                  <input class="form-control" name="kelas" placeholder="Kelas contoh : VII" type="text" required>
                                 </div>
                               </div>
                             </div>
@@ -54,7 +54,7 @@
                               <label class="form-control-label" for="exampleDatepicker"> Kandidat :</label>
                               <?php foreach($kandidat as $row):?>
                                 <div class="custom-control custom-radio mb-3">
-                                  <input type="radio" id="customRadio<?= $row->id_kandidat?>" name="vote" value="<?= $row->id_kandidat?>" class="custom-control-input">
+                                  <input type="radio" id="customRadio<?= $row->id_kandidat?>" name="vote" value="<?= $row->id_kandidat?>" class="custom-control-input" required>
                                   <label class="custom-control-label" for="customRadio<?= $row->id_kandidat?>">Ketua : <?= $row->ketua?> & Wakil : <?= $row->wakil?></label>
                                 </div>
                               <?php endforeach;?>
