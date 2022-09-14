@@ -27,7 +27,8 @@ class Voting_guru extends CI_Controller
 
     public function vote_guru(){
         $data = [
-            'nama_guru' => $this->input->post('nama_guru')
+            'nama_guru' => $this->input->post('nama_guru'),
+            'jk'        => $this->input->post('jk')
         ];
         $this->db->insert('guru',$data);
         $id = $this->db->insert_id();
