@@ -17,11 +17,12 @@ class Voting extends CI_Controller
 
     public function index()
     {
-        $data['title']		    = "Dashboard Vote";
-                          $this->db->join('siswa s','s.idsiswa = v.id_siswa');
-                          $this->db->order_by('id_vote','desc');
-        $data['voting'] = $this->db->get('voting v')->result();
-        $data['kandidat'] = $this->db->get('kandidat')->result();
+        $data['title']      = "Dashboard Siswa";
+        $ta   = $this->db->select('id_ta')->get_where('tb_tahunajar',['status' => 'aktif'])->row()->id_ta;
+                              $this->db->join('tb_siswa s','s.idsiswa = v.id_siswa');
+                              $this->db->order_by('id_vote','desc');
+        $data['voting']     = $this->db->get_where('voting v',['v.ta_id' => $ta])->result();
+        $data['kandidat']   = $this->db->get_where('tb_kandidat',['ta_id' => $ta])->result();
         $this->template->load('template_back/template','voting/voting',$data);
 	}
 
@@ -30,7 +31,7 @@ class Voting extends CI_Controller
             'nama' => $this->input->post('nama_siswa'),
             'kelas'=> $this->input->post('kelas')
         ];
-        $this->db->insert('siswa',$data);
+        $this->db->insert('tb_siswa',$data);
         $id = $this->db->insert_id();
         
         $data_vote = [

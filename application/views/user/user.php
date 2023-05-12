@@ -6,7 +6,7 @@
               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                   <li class="breadcrumb-item"><a href="<?= site_url('dashboard')?>"><i class="fas fa-home"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">User</li>
+                  <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
               </nav>
             </div> 
@@ -45,7 +45,7 @@
                       <td><?= $row->level?></td>
                       <td><?= $row->status == 'Y' ? '<span class="badge badge-lg badge-success">active</span>' : '<span class="badge badge-lg badge-danger">inactive</span>' ?></td>
                       <td>
-                          <button type="button" class="btn btn-sm btn-warning ml-1" data-toggle="modal" data-target="#password" onclick=""><i class="ni ni-key-25"></i>&nbsp; Set Password</button>
+                          <button type="button" class="btn btn-sm btn-warning ml-1" data-toggle="modal" data-target="#password" onclick="setPaswd(<?= $row->id_user?>)"><i class="ni ni-key-25"></i>&nbsp; Set Password</button>
                           <button type="button" class="btn btn-sm btn-info ml-1" data-toggle="modal" data-target="#edit" onclick="showUserEdit(<?= $row->id_user?>)"><i class="ni ni-ruler-pencil"></i>&nbsp; Edit</button>
                           <button type="button" class="btn btn-sm btn-danger ml-1" onclick="deleteUser(<?= $row->id_user?>)"><i class="fas fa-trash"></i>&nbsp; Delete</button>
                       </td>
@@ -104,9 +104,8 @@
                               <div class="input-group input-group-merge">
                                 <select name="level" class="form-control" required>
                                   <option disabled selected> --- Pilih Level --- </option>
-                                  <option value="admin">Admin</option>
-                                    <option value="keuangan">Keuangan</option>
-                                    <option value="staff">Staff</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="superuser">Superuser</option>
                                 </select>
                               </div>
                             </div>

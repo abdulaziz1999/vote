@@ -27,18 +27,12 @@ class Login extends CI_Controller
                     $this->session->set_userdata('email',$row->email);
                     $this->session->set_userdata('level',$row->level);
                 }
-          	if($this->session->userdata('level') == 'admin'){
-				$this->session->set_flashdata('sukses', "Selamat Datang $nama !!!");
-                redirect('dashboard');
-            }elseif($this->session->userdata('level') == 'staff'){
-				$this->session->set_flashdata('sukses', "Selamat Datang $nama !!!");
-                redirect('dashboard');
-            }elseif($this->session->userdata('level') == 'keuangan'){
+          	if($this->session->userdata('level')){
 				$this->session->set_flashdata('sukses', "Selamat Datang $nama !!!");
                 redirect('dashboard');
             }else{
                 $this->session->set_flashdata('error', "gagal");
-                redirect(base_url('login'));
+                redirect('login');
             }
 
         } else{
@@ -50,7 +44,7 @@ class Login extends CI_Controller
     public function index()
     {
 		$data['title']		= "Login Vote";
-        $this->template->load('template_front/template_login','login',$data);
+        $this->template->load('template_front/template_login','login/login',$data);
     }
     
     function logout(){

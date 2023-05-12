@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Guru extends CI_Controller
+class Level extends CI_Controller
 {
 	
         
@@ -19,41 +19,42 @@ class Guru extends CI_Controller
 
     public function index()
     {
-        $data['title']  = "Guru";
-        $data['guru']   = $this->db->get_where('tb_guru',['ta_id' => $this->my_model->idta()])->result();
-        $this->template->load('template_back/template','guru/guru',$data);
+        $data['title']		= "Level";
+        $data['level']     = $this->db->get('tb_level')->result();
+        $this->template->load('template_back/template','level/level',$data);
     }
 
     function dataEdit(){
         $data['id']   = $this->input->post('id');
-        $data['guru'] = $this->db->get_where('tb_guru',['id_guru' => $data['id']])->row();
-        $this->load->view('guru/edit_guru',$data);
+        $data['level'] = $this->db->get_where('tb_level',['id_level' => $data['id']])->row();
+        $this->load->view('level/edit_level',$data);
     }
 
     function create(){
         $data = [
-            'nama_guru'          => $this->input->post('nama_guru'),
+            'nama_level'          => $this->input->post('nama_level'),
         ];
 
-        $this->db->insert('tb_guru',$data);
+        $this->db->insert('tb_level',$data);
         $this->session->set_flashdata('sukses','sukses');
         redirect($_SERVER['HTTP_REFERER']);
     }
 
     function update($id){
       $data = [
-        'nama_guru'          => $this->input->post('nama_guru'),
+        'nama_level'          => $this->input->post('nama_level'),
       ];
 
-        $this->db->update('tb_guru',$data,['id_guru' => $id]);
+        $this->db->update('tb_level',$data,['id_level' => $id]);
         $this->session->set_flashdata('update','update');
         redirect($_SERVER['HTTP_REFERER']);
     }
 
     function delete($id){
-        $this->db->delete('tb_guru',['id_guru' => $id]);
+        $this->db->delete('tb_level',['id_level' => $id]);
         $this->session->set_flashdata('hapus','hapus');
         redirect($_SERVER['HTTP_REFERER']);
     }
+
 
 }

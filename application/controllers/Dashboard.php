@@ -18,10 +18,10 @@ class Dashboard extends CI_Controller
     public function index()
     {
         $data['title']		    = "Dashboard Vote";
-        $data['siswa'] = $this->db->get('siswa')->num_rows();
-        $data['guru']   = $this->db->get('guru')->num_rows();
-        $data['voting']   = $this->db->get('voting')->num_rows();
-        $this->template->load('template_back/template','dashboard',$data);
+        $data['siswa']          = $this->db->get_where('tb_siswa',['ta_id' => $this->my_model->idta()])->num_rows();
+        $data['guru']           = $this->db->get_where('tb_guru',['ta_id' => $this->my_model->idta()])->num_rows();
+        $data['voting']         = $this->db->get_where('voting',['ta_id' => $this->my_model->idta()])->num_rows();
+        $this->template->load('template_back/template','dashboard/dashboard',$data);
 	}
 
     

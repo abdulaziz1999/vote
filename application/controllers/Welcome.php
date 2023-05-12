@@ -20,6 +20,20 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		$data = $this->db->get('tb_siswa');
+
+		$no = 1;
+		//loop while data siswa dan echo data
+		for ($i=0; $i < $data->num_rows(); $i++) { 
+			$siswa = $data->row_array($i);
+			echo $no++.". ".$siswa['nama']."<br>";
+		}
+
+		
 		$this->load->view('welcome_message');
+	}
+
+	function debug(){
+		
 	}
 }

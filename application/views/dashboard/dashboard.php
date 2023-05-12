@@ -3,11 +3,10 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                   <li class="breadcrumb-item"><a href="<?= site_url()?>"><i class="fas fa-home"></i> Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboards</li>
+                  <li class="breadcrumb-item active" aria-current="page"><?=$title?></li>
                 </ol>
               </nav>
             </div>
@@ -92,7 +91,9 @@
                       </div>
                       <div class="card-body">
                         <div class="chart">
-                          <canvas id="chart-pie" class="chart-canvas"></canvas>
+                        <?php if($this->my_model->count_desc()):?>
+                          <canvas id="chart-pie1" class="chart-canvas"></canvas>
+                        <?php endif; ?>
                         </div>
                       </div>
                   </div>
@@ -103,14 +104,17 @@
                           <h5 class="h3 mb-0">Urutan Voting </h5>
                       </div>
                       <div class="card-body">
+                      <?php if($this->my_model->count_desc()):?>
                       <?php $no=1; foreach($this->my_model->count_desc() as $row){
                           $total = $siswa + $guru;
                           $persen = round($row->jml/$total * 100,0);
                           ?>
                           <div class="alert alert-success" role="alert">
-                            <i class="ni ni-trophy text-yellow"></i> &nbsp;&nbsp;&nbsp;&nbsp; <strong> <?= $no++?>.</strong> <?= $this->my_model->nama_paslon($row->vote)?> : <?= $persen?>% 
+                            <i class="ni ni-trophy text-yellow"></i> &nbsp;&nbsp;&nbsp;&nbsp; 
+                            <strong> <?= $no++?>.</strong> <?= $this->my_model->nama_paslon($row->vote)?> : <?= $persen?>% 
                           </div>
                       <?php }?>
+                      <?php endif; ?>
                       <!-- <div class="chart">
                         <canvas id="chart-doughnut" class="chart-canvas"></canvas>
                       </div> -->

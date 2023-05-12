@@ -15,13 +15,14 @@ class Voting_guru extends CI_Controller
         }	
     }
 
-    public function index()
+    public function index() 
     {
-        $data['title']		    = "Dashboard Vote";
-                          $this->db->join('guru g','g.idguru = v.id_guru');
-                          $this->db->order_by('id_vote','desc');
-        $data['voting'] = $this->db->get('voting v')->result();
-        $data['kandidat'] = $this->db->get('kandidat')->result();
+        $data['title']      = "Dashboard Vote";
+        $ta   = $this->db->select('id_ta')->get_where('tb_tahunajar',['status' => 'aktif'])->row()->id_ta;
+                              $this->db->join('tb_guru g','g.idguru = v.id_guru');
+                              $this->db->order_by('id_vote','desc');
+        $data['voting']     = $this->db->get_where('voting v',['v.ta_id' => $ta])->result();
+        $data['kandidat']   = $this->db->get_where('tb_kandidat',['ta_id' => $ta])->result();
         $this->template->load('template_back/template','voting/voting_guru',$data);
 	}
 
@@ -30,7 +31,7 @@ class Voting_guru extends CI_Controller
             'nama_guru' => $this->input->post('nama_guru'),
             'jk'        => $this->input->post('jk')
         ];
-        $this->db->insert('guru',$data);
+        $this->db->insert('tb_guru',$data);
         $id = $this->db->insert_id();
         
         $data_vote = [

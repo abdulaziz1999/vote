@@ -42,12 +42,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <!-- Icons -->
     <link rel="stylesheet" href="<?= base_url()?>assets/vendor/nucleo/css/nucleo.css" type="text/css">
-    <link rel="stylesheet" href="<?= base_url()?>assets/vendor/%40fortawesome/fontawesome-free/css/all.min.css"
-        type="text/css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/vendor/%40fortawesome/fontawesome-free/css/all.min.css" type="text/css">
     <!-- Page plugins -->
     <link rel="stylesheet" href="<?= base_url()?>assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet"
-        href="<?= base_url()?>assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?= base_url()?>assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= base_url()?>assets/vendor/sweetalert2/dist/sweetalert2.min.css">
     <!-- Argon CSS -->
@@ -56,6 +54,10 @@
 </head>
 
 <body>
+    <?php 
+    $level = $this->session->userdata('level');
+    $uri   = $this->uri->segment(1);
+    ?>
     <!-- Sidenav -->
     <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">
         <div class="scrollbar-inner">
@@ -81,30 +83,30 @@
                 <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                     <!-- Nav items -->
                     <ul class="navbar-nav">
-                        <?php $menu = $this->my_model->menu($this->session->userdata('level'))->result();
+                        <?php $menu = $this->my_model->menu($level)->result();
                         foreach($menu as $row):?>
                             <?php if($row->type == 'parent'):?>
                             <li class="nav-item">
-                                <a class="nav-link <?= $this->uri->segment(1) == $row->segment ? 'active' : ''?>"
+                                <a class="nav-link <?= $uri == $row->segment ? 'active' : ''?>"
                                     href="<?= base_url($row->segment)?>">
-                                    <?= $row->icon?>
+                                    <i class="<?= $row->icon.' '.$row->color?> "></i>
                                     <span class="nav-link-text"><?= $row->nama_menu?></span>
                                 </a>
                             </li>
                             <?php elseif($row->type == 'dropdown'):?>
                             <li class="nav-item">
-                                <a class="nav-link <?= $this->uri->segment(1) == $row->segment ? 'active' : ''?>" href="#navbar-tables" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
-                                    <?= $row->icon?>
+                                <a class="nav-link <?= $uri == @$this->my_model->cekSegement($level,$uri,$row->id_menu) ? 'active' : ''?>" href="#navbar-<?= $row->segment?>" data-toggle="collapse" role="button" aria-expanded="<?= $uri == @$this->my_model->cekSegement($level,$uri,$row->id_menu) ? 'true' : 'false'?>" aria-controls="navbar-<?= $row->segment?>">
+                                    <i class="<?= $row->icon.' '.$row->color?> "></i>
                                     <span class="nav-link-text"><?= $row->nama_menu?></span>
                                 </a>
-                                <div class="collapse <?= $this->uri->segment(1) == $row->segment ? 'show' : ''?>" id="navbar-tables">
+                                <div class="collapse <?= $uri == @$this->my_model->cekSegement($level,$uri,$row->id_menu) ? 'show' : ''?>" id="navbar-<?= $row->segment?>">
                                     <ul class="nav nav-sm flex-column">
-                                    <?php $menuchild = $this->my_model->menuChild($this->session->userdata('level'),$row->id_menu)->result();
+                                    <?php $menuchild = $this->my_model->menuChild($level,$row->id_menu)->result();
                                         foreach($menuchild as $key):?>
                                         <li class="nav-item">
-                                            <a href="<?= base_url($key->segment)?>" class="nav-link <?= $this->uri->segment(1) == $key->segment ? 'active' : ''?>">
-                                            <span class="sidenav-mini-icon"> T </span>
-                                            <span class="sidenav-normal"> <?= $key->nama_menu?> </span>
+                                            <a href="<?= base_url($key->segment)?>" class="nav-link <?= $uri == $key->segment ? 'active' : ''?>">
+                                            <span class="sidenav-mini-icon"> <i class="<?= $key->icon.' '.$key->color?> "></i> </span>
+                                            <span class="sidenav-normal">&nbsp; <?= $key->nama_menu?> </span>
                                             </a>
                                         </li>
                                         <?php endforeach;?>
@@ -196,8 +198,8 @@
     <script src="<?= base_url()?>assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?= base_url()?>assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
     <!-- Optional JS -->
-    <!-- <script src="<?= base_url()?>assets/vendor/chart.js/dist/Chart.min.js"></script> -->
-    <!-- <script src="<?= base_url()?>assets/vendor/chart.js/dist/Chart.extension.js"></script> -->
+    <script src="<?= base_url()?>assets/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="<?= base_url()?>assets/vendor/chart.js/dist/Chart.extension.js"></script>
     <script src="<?= base_url()?>assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="<?= base_url()?>assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="<?= base_url()?>assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
@@ -211,116 +213,47 @@
     <script src="<?= base_url()?>assets/js/argon.min9f1e.js?v=1.1.0"></script>
     <!-- Demo JS - remove this in your project -->
     <script src="<?= base_url()?>assets/js/demo.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script> -->
+    <?php if($this->uri->segment(1) == 'dashboard'):?>
     <script>
-    //    $('#datatable-basic1').DataTable( {
-    //     scrollY:        '50vh',
-    //     scrollX: true,
-    //     scrollCollapse: true,
-    //     paging:         false,
-    //     dom: "Bfrtip",
-    //     fixedColumns: {
-    //         leftColumns: 2
-    //     },
-    // } );
-    jQuery(document).ready(function() {
-        var chartDiv = $("#chart-pie");
-        var myChart = new Chart(chartDiv, {
-            type: 'pie',
-            data: {
-                labels: [
-                    <?php foreach($this->my_model->count() as $row){?>
-                        "Paslon <?= $row->vote?>",
-                    <?php }?>
-                ],
-                datasets: [
-                {
-                    data: [
+        jQuery(document).ready(function() {
+            var chartDiv = $("#chart-pie1");
+            var myChart = new Chart(chartDiv, {
+                type: 'pie',
+                data: {
+                    labels: [
                         <?php foreach($this->my_model->count() as $row){?>
-                            <?= $row->jml?>,
+                            "Paslon <?= $row->vote?>",
                         <?php }?>
                     ],
-                    backgroundColor: [
-                    "#FF6384",
-                    "#4BC0C0",
-                    "#FFCE56",
-                    ]
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Hasil Voting'
+                    datasets: [
+                    {
+                        data: [
+                            <?php foreach($this->my_model->count() as $row){?>
+                                <?= $row->jml?>,
+                            <?php }?>
+                        ],
+                        backgroundColor: [
+                        "#FF6384",
+                        "#4BC0C0",
+                        "#FFCE56",
+                        ]
+                    }]
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-            }
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Hasil Voting'
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
         });
-    });
-    </script>
-
-    <?php if($this->uri->segment(1) == 'df_seminar'):?>
-    <script>
-    function showDataEdit(id) {
-        $.ajax({
-            url: "<?=site_url('df_seminar/dataEdit');?>",
-            type: "POST",
-            data: {
-                id: id
-            },
-            dataType: "html",
-            beforeSend: function() {
-                $('#data_edit').html(
-                    "<img style='margin-left:240px' src='<?=base_url()?>assets/img/icons/loader.gif'>");
-            },
-            success: function(response) {
-                $('#data_edit').empty();
-                $('#data_edit').append(response);
-            }
-        });
-    }
-
-    function deleteSeminar(id) {
-        r = confirm("Anda Yakin Ingin Menghapus");
-        if (r == true) {
-            window.location = "<?=site_url('df_seminar/delete/')?>" + id;
-        } else {
-            return false;
-        }
-
-    }
-
-    function dataEditPeserta(id) {
-        $.ajax({
-            url: "<?=site_url('df_seminar/dataEditPeserta');?>",
-            type: "POST",
-            data: {
-                id: id
-            },
-            dataType: "html",
-            beforeSend: function() {
-                $('#data_edit').html(
-                    "<img style='margin-left:240px' src='<?=base_url()?>assets/img/icons/loader.gif'>");
-            },
-            success: function(response) {
-                $('#data_edit').empty();
-                $('#data_edit').append(response);
-            }
-        });
-    }
-
-    function deletePeserta(id) {
-        r = confirm("Anda Yakin Ingin Menghapus");
-        if (r == true) {
-            window.location = "<?=site_url('df_seminar/deletePeserta/')?>" + id;
-        } else {
-            return false;
-        }
-
-    }
     </script>
     <?php endif;?>
 
+    <!-- user -->
     <?php if($this->uri->segment(1) == 'user'):?>
     <script>
         function showUserEdit(id) {
@@ -350,14 +283,48 @@
             }
 
         }
+    </script>
+    <?php endif;?>
+
+    <!-- kandidat -->
+    <?php if($this->uri->segment(1) == 'kandidat'):?>
+    <script>
+        function showKandidatEdit(id) {
+            $.ajax({
+                url: "<?=site_url('kandidat/dataEdit');?>",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                dataType: "html",
+                beforeSend: function() {
+                    $('#data_edit').html("<img src='<?=base_url()?>assets/img/icons/loader.gif'>");
+                },
+                success: function(response) {
+                    $('#data_edit').empty();
+                    $('#data_edit').append(response);
+                }
+            });
+        }
+
+        function deleteKandidat(id) {
+            r = confirm("Anda Yakin Ingin Menghapus");
+            if (r == true) {
+                window.location = "<?=site_url('kandidat/delete/')?>" + id;
+            } else {
+                return false;
+            }
+
+        }
         </script>
     <?php endif;?>
 
-    <?php if($this->uri->segment(1) == 'aset'):?>
+    <!-- tahunajar -->
+    <?php if($this->uri->segment(1) == 'tahunajar'):?>
     <script>
-        function showAsetEdit(id) {
+        function showTaEdit(id) {
             $.ajax({
-                url: "<?=site_url('aset/dataEdit');?>",
+                url: "<?=site_url('tahunajar/dataEdit');?>",
                 type: "POST",
                 data: {
                     id: id
@@ -373,63 +340,25 @@
             });
         }
 
-        function showUploadFile(id) {
-            $.ajax({
-                url: "<?=site_url('aset/dataUpload');?>",
-                type: "POST",
-                data: {
-                    id: id
-                },
-                dataType: "html",
-                beforeSend: function() {
-                    $('#data_upload').html("<img src='<?=base_url()?>assets/img/icons/loader.gif'>");
-                },
-                success: function(response) {
-                    $('#data_upload').empty();
-                    $('#data_upload').append(response);
-                }
-            });
-        }
-
-        function vDenah(id,idaset){
-            $.ajax({
-                url: "<?=site_url('aset/vDenah');?>",
-                type: "POST",
-                data: {
-                    id: id,
-                    idaset:idaset
-                }
-            });
-        }
-
-        function vDocument(id,idaset){
-            $.ajax({
-                url: "<?=site_url('aset/vDokumen');?>",
-                type: "POST",
-                data: {
-                    id: id,
-                    idaset:idaset
-                }
-            });
-        }
-
-        function deleteAset(id) {
+        function deleteTa(id) {
             r = confirm("Anda Yakin Ingin Menghapus");
             if (r == true) {
-                window.location = "<?=site_url('aset/delete/')?>" + id;
+                window.location = "<?=site_url('tahunajar/delete/')?>" + id;
             } else {
                 return false;
             }
 
         }
-    </script>
+        </script>
     <?php endif;?>
 
-    <?php if($this->uri->segment(1) == 'aset_dep'):?>
+    <!-- menu -->
+    <?php if($this->uri->segment(1) == 'menu'):?>
     <script>
-        function showEditAsetDep(id) {
+        
+        function showMenuEdit(id) {
             $.ajax({
-                url: "<?=site_url('aset_dep/dataEdit');?>",
+                url: "<?=site_url('menu/dataEdit');?>",
                 type: "POST",
                 data: {
                     id: id
@@ -445,34 +374,149 @@
             });
         }
 
-        function showUploadFile(id) {
+        function deleteMenu(id) {
+            r = confirm("Anda Yakin Ingin Menghapus");
+            if (r == true) {
+                window.location = "<?=site_url('menu/delete/')?>" + id;
+            } else {
+                return false;
+            }
+
+        }
+
+        function takeIcon(e){
+            var iconIndex = e.selectedIndex
+            var textSpan = e[iconIndex].innerText
+            var valueSpan = '<i class="'+e.value +'"></i>' + ' <span>'+ textSpan +'</span>'
+            $('#icon-insert').empty();
+            $('#icon-insert').append(valueSpan);
+            document.getElementById('inputIcon').value = e.value
+        }
+
+        function takeColor(e){
+            var iconColor = this.event.target.firstChild.value
+            var iconTag = document.getElementById('selectIcon')
+            var iconIndex = iconTag.options.selectedIndex
+            var textValue = iconTag.options[iconIndex].dataset.icon
+            var textSpan = iconTag.options[iconIndex].innerText
+            var insertIcon = '<i class="'+textValue +' '+ iconColor+'"></i>'+' <span>'+textSpan+'</span>'
+            var valueIcon = '<i class="'+textValue +' '+ iconColor+'"></i>'
+            $('#icon-insert').empty();
+            $('#icon-insert').append(insertIcon);
+            document.getElementById('inputIcon').value = textValue
+        }
+
+        function typeMenu(e){
+            var typeValue = e.value
+            if(typeValue == 'child'){
+                document.getElementById('formChild').style = 'display:block'
+            }else if(typeValue == 'parent'){
+                document.getElementById('formChild').style = 'display:none'
+            }else if(typeValue == 'dropdown'){
+                document.getElementById('formChild').style = 'display:none'
+            }
+        }
+
+        //udpate
+        function takeIconUpdate(e){
+            var iconIndex = e.selectedIndex
+            var textSpan = e[iconIndex].innerText
+            var valueSpan = '<i class="'+e.value +'"></i>' + ' <span>'+ textSpan +'</span>'
+            $('#icon-insert-update').empty();
+            $('#icon-insert-update').append(valueSpan);
+            document.getElementById('inputIconUpdate').value = e.value
+        }
+
+        function takeColorUpdate(e){
+            var iconColor = this.event.target.firstChild.value
+            var iconTag = document.getElementById('selectIconUpdate')
+            var iconIndex = iconTag.options.selectedIndex
+            var textValue = iconTag.options[iconIndex].dataset.icon
+            var textSpan = iconTag.options[iconIndex].innerText
+            var insertIcon = '<i class="'+textValue +' '+ iconColor+'"></i>'+' <span>'+textSpan+'</span>'
+            var valueIcon = '<i class="'+textValue +' '+ iconColor+'"></i>'
+            $('#icon-insert-update').empty();
+            $('#icon-insert-update').append(insertIcon);
+            document.getElementById('inputIconUpdate').value = textValue
+        }
+
+        function typeMenuUpdate(e){
+            var typeValue = e.value
+            if(typeValue == 'child'){
+                document.getElementById('formChildUpdate').style = 'display:block'
+            }else if(typeValue == 'parent'){
+                document.getElementById('formChildUpdate').style = 'display:none'
+            }else if(typeValue == 'dropdown'){
+                document.getElementById('formChildUpdate').style = 'display:none'
+            }
+        }
+        </script>
+    <?php endif;?>
+
+    <!-- level -->
+    <?php if($this->uri->segment(1) == 'level'):?>
+    <script>
+        function showLevelEdit(id) {
             $.ajax({
-                url: "<?=site_url('aset_dep/dataUpload');?>",
+                url: "<?=site_url('level/dataEdit');?>",
                 type: "POST",
                 data: {
                     id: id
                 },
                 dataType: "html",
                 beforeSend: function() {
-                    $('#data_upload').html("<img src='<?=base_url()?>assets/img/icons/loader.gif'>");
+                    $('#data_edit').html("<img src='<?=base_url()?>assets/img/icons/loader.gif'>");
                 },
                 success: function(response) {
-                    $('#data_upload').empty();
-                    $('#data_upload').append(response);
+                    $('#data_edit').empty();
+                    $('#data_edit').append(response);
                 }
             });
         }
 
-        function deleteAsetDep(id) {
+        function deleteLevel(id) {
             r = confirm("Anda Yakin Ingin Menghapus");
             if (r == true) {
-                window.location = "<?=site_url('aset_dep/delete/')?>" + id;
+                window.location = "<?=site_url('level/delete/')?>" + id;
             } else {
                 return false;
             }
 
         }
-    </script>
+        </script>
+    <?php endif;?>
+
+    <!-- group akses -->
+    <?php if($this->uri->segment(1) == 'group_akses'):?>
+    <script>
+        function showGroupEdit(id) {
+            $.ajax({
+                url: "<?=site_url('group_akses/dataEdit');?>",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                dataType: "html",
+                beforeSend: function() {
+                    $('#data_edit').html("<img src='<?=base_url()?>assets/img/icons/loader.gif'>");
+                },
+                success: function(response) {
+                    $('#data_edit').empty();
+                    $('#data_edit').append(response);
+                }
+            });
+        }
+
+        function deleteGroup(id) {
+            r = confirm("Anda Yakin Ingin Menghapus");
+            if (r == true) {
+                window.location = "<?=site_url('group_akses/delete/')?>" + id;
+            } else {
+                return false;
+            }
+
+        }
+        </script>
     <?php endif;?>
 
 </body>

@@ -21,13 +21,13 @@ class User extends CI_Controller
     {
         $data['title']		= "User";
         $data['user']     = $this->db->get('tb_user')->result();
-        $this->template->load('template_back/template','user',$data);
+        $this->template->load('template_back/template','user/user',$data);
     }
 
     function dataEdit(){
         $data['id']   = $this->input->post('id');
         $data['user'] = $this->db->get_where('tb_user',['id_user' => $data['id']])->row();
-        $this->load->view('formEditUser',$data);
+        $this->load->view('user/edit_user',$data);
     }
 
     function create(){
